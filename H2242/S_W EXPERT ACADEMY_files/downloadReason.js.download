@@ -1,0 +1,37 @@
+/**
+ * 개인정보를 포함하는 파일 다운로드 wrapper
+ * 다운로드 사유 입력기능 제공
+ * Front 용
+ */
+
+var PrivacyDownloadWrapper = function() {};
+
+PrivacyDownloadWrapper.downloadWithReason = function(msgTitle, msgWarnig, srcForm, msgYN, msg) {
+	PrivacyDownloadWrapper.downloadForm = srcForm;
+
+	bootbox.prompt({
+		title : msgTitle,
+		value : "",
+		inputType : "text",
+		callback : function(result) {
+			if (result === null || result === "") {
+				bootbox.alert(msgWarnig, "WARNING", "", null, function() {});
+
+			} else {
+				if(msgYN =='Y'){
+					bootbox.alert(msg, "", "4", null, function(){});
+				}
+
+				var input = document.createElement("input");
+		        input.type = "hidden";
+		        input.name = "downloadReason";
+		        input.value = result;
+				srcForm.appendChild(input);
+				srcForm.submit();
+			}
+		} 
+	});	
+
+	
+}
+

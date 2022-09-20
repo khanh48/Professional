@@ -1,0 +1,41 @@
+﻿@charset "utf-8";
+/* 얼럿 */
+.fade {opacity:0;
+	-webkit-transition:opacity .15s linear;
+	-moz-transition:opacity .15s linear;
+	-o-transition:opacity .15s linear;
+	transition:opacity .15s linear}
+.fade.in {opacity:1}
+
+
+.modal.fade {
+	-webkit-transition:opacity .3s linear, center .3s ease-out;
+	-moz-transition:opacity .3s linear, center .3s ease-out;
+	-o-transition:opacity .3s linear, center .3s ease-out;
+	transition:opacity .3s linear, center .3s ease-out
+}
+
+.modal {position:fixed;	top:50%; left:50%; width:400px;margin:-120px 0 0 -200px; background-color:#fff; box-shadow:0px 3px 5px rgba(0,0,0,0.5); z-index:9999; }
+.modal-header {padding:8px 15px;color:#131313;position:relative;}
+.modal-header .alert-colse{position:absolute;right:15px;top:15px;width:15px;}
+.modal-header h4 {font-size:18px;color:#131313 }
+.modal-body {text-align:center;margin-top:40px;}
+.bootbox-body {padding:15px 15px 15px 15px;font-size:16px;font-weight:bold}
+.bootbox-img{padding:0;}
+.modal-body .bootbox_title{display:inline-block;vertical-align:middle; font-size:13px; text-align:left;padding-bottom:0;font-weight:normal; padding-top:0px;}
+.modal-body .txt{ min-height:84px; max-height:320px; overflow-y:auto; padding:8px; margin:0 15px; line-height:16px; border:1px solid #eaeaea;text-align:left;}
+.modal-body .modal-title{display:block;margin:20px auto 0 auto;text-align:center;}
+.modal-form {margin-bottom:0}
+.modal-footer { text-align:center;margin-bottom:30px; }
+.modal-footer:before, .modal-footer:after {display:table; line-height:0; content:""}
+.modal-footer:after {clear:both}
+.modal-footer .btn {margin-bottom:30px; margin-left:10px; margin:15px 2px;}
+.modal-footer .btn-primary {padding:5px; border:1px solid #2d5b99;background:#225a93; color:#fff; width:100px; font-size:16px; text-align:center; cursor:pointer;}
+.modal-footer .btn_primary:hover {border:1px solid #113b75; background:#134487;}
+.modal-footer .btn-default {margin-left:10px; padding:5px; border:1px solid #989898; background:#999;  color:#fff; width:100px; font-size:16px; text-align:center; cursor:pointer;}
+.modal-footer .btn_default:hover {border:1px solid #5e5e5e; background:#6b6b6b;}
+
+.modal-backdrop {position:fixed;top:0; right:0; bottom:0;left:0; z-index:5000; background-color: #000}
+.modal-backdrop.fade {opacity:0}
+.modal-backdrop, .modal-backdrop.fade.in {opacity:.5; filter: alpha(opacity = 50)}
+.bootbox-form input{font-size:14px;width:100%;color:#131313;height:31px;border:1px solid #dcdcdc;padding:0 0px;}

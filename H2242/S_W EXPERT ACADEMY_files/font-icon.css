@@ -1,0 +1,308 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../font/fonts/icomoon.ttf?479ylk') format('truetype'),
+    url('../font/fonts/icomoon.woff?479ylk') format('woff'),
+    url('../font/fonts/icomoon.svg?479ylk#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+  
+}
+
+[class^="icomoon-"], [class*="icomoon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+}
+
+.icomoon-home:before {
+  content: "\e900";
+}
+.icomoon-about:before {
+  content: "\e901";
+}
+.icomoon-admin:before {
+  content: "\e902";
+}
+.icomoon-alram:before {
+  content: "\e903";
+}
+.icomoon-arrow-right:before {
+  content: "\e904";
+}
+.icomoon-arrow-right2:before {
+  content: "\e905";
+}
+.icomoon-banner-guide:before {
+  content: "\e906";
+}
+.icomoon-banner-reperence:before {
+  content: "\e907";
+}
+.icomoon-banner-study:before {
+  content: "\e908";
+}
+.icomoon-bar:before {
+  content: "\e909";
+}
+.icomoon-card:before {
+  content: "\e90a";
+}
+.icomoon-check .path1:before {
+  content: "\e90b";
+  color: rgb(230, 233, 237);
+}
+.icomoon-check .path2:before {
+  content: "\e90c";
+  margin-left: -1.25em;
+  color: rgb(125, 128, 132);
+}
+.icomoon-check2 .path1:before {
+  content: "\e90d";
+  color: rgb(255, 255, 255);
+}
+.icomoon-check2 .path2:before {
+  content: "\e90e";
+  margin-left: -1.1767578125em;
+  color: rgb(189, 201, 214);
+}
+.icomoon-close:before {
+  content: "\e90f";
+  color: #676767;
+}
+.icomoon-crown:before {
+  content: "\e910";
+}
+.icomoon-error:before {
+  content: "\e911";
+}
+.icomoon-file:before {
+  content: "\e912";
+}
+.icomoon-error-circle:before {
+  content: "\e913";
+}
+.icomoon-info-circle:before {
+  content: "\e914";
+}
+.icomoon-like:before {
+  content: "\e915";
+}
+.icomoon-list:before {
+  content: "\e916";
+}
+.icomoon-lnb-m01 .path1:before {
+  content: "\e917";
+  color: rgb(255, 255, 255);
+}
+.icomoon-lnb-m01 .path2:before {
+  content: "\e918";
+  margin-left: -1.1787109375em;
+  color: rgb(49, 255, 248);
+}
+.icomoon-lnb-m02 .path1:before {
+  content: "\e919";
+  color: rgb(255, 255, 255);
+}
+.icomoon-lnb-m02 .path2:before {
+  content: "\e91a";
+  margin-left: -1.142578125em;
+  color: rgb(49, 255, 248);
+}
+.icomoon-lnb-m03 .path1:before {
+  content: "\e91b";
+  color: rgb(255, 255, 255);
+}
+.icomoon-lnb-m03 .path2:before {
+  content: "\e91c";
+  margin-left: -1.142578125em;
+  color: rgb(49, 255, 248);
+}
+.icomoon-lnb-m04 .path1:before {
+  content: "\e91d";
+  color: rgb(255, 255, 255);
+}
+.icomoon-lnb-m04 .path2:before {
+  content: "\e91e";
+  margin-left: -1.142578125em;
+  color: rgb(49, 255, 248);
+}
+.icomoon-log .path1:before {
+  content: "\e91f";
+  color: rgb(167, 212, 211);
+  opacity: 0.6; 
+}
+.icomoon-log .path2:before {
+  content: "\e920";
+  margin-left: -0.90234375em;
+  color: rgb(76, 79, 82); z-index:1; position:relative;
+}
+.icomoon-logout:before {
+  content: "\e921";
+}
+.icomoon-my .path1:before {
+  content: "\e922";
+  color: rgb(230, 233, 237);
+}
+.icomoon-my .path2:before {
+  content: "\e923";
+  margin-left: -0.791015625em;
+  color: rgb(125, 128, 132); z-index:1; position:relative;
+}
+.icomoon-my2 .path1:before {
+  content: "\e924";
+  color: rgb(167, 212, 211);
+  opacity: 0.6;
+}
+.icomoon-my2 .path2:before {
+  content: "\e925";
+  margin-left: -0.81640625em;
+  color: rgb(76, 79, 82); z-index:1; position:relative;
+}
+.icomoon-next:before {
+  content: "\e926";
+}
+.icomoon-next-last:before {
+  content: "\e927";
+}
+.icomoon-notice .path1:before {
+  content: "\e928";
+  color: rgb(230, 233, 237);
+}
+.icomoon-notice .path2:before {
+  content: "\e929";
+  margin-left: -1.119140625em;
+  color: rgb(123, 126, 130); z-index:1; position:relative;
+}
+.icomoon-play:before {
+  content: "\e92a";
+}
+.icomoon-point .path1:before {
+  content: "\e92b";
+  color: rgb(230, 233, 237);
+}
+.icomoon-point .path2:before {
+  content: "\e92c";
+  margin-left: -1.1904296875em;
+  color: rgb(125, 128, 132); z-index:1; position:relative;
+}
+.icomoon-prev:before {
+  content: "\e92d";
+}
+.icomoon-prev-last:before {
+  content: "\e92e";
+}
+.icomoon-rank:before {
+  content: "\e92f";
+}
+.icomoon-reply:before {
+  content: "\e930";
+}
+.icomoon-search .path1:before {
+  content: "\e931";
+  color: rgb(167, 212, 211);
+}
+.icomoon-search .path2:before {
+  content: "\e932";
+  margin-left: -1.0576171875em;
+  color: rgb(76, 79, 82); z-index:1; position:relative;
+}
+.icomoon-search2:before {
+  content: "\e933";
+}
+.icomoon-support:before {
+  content: "\e934";
+}
+.icomoon-talk:before {
+  content: "\e935";
+}
+.icomoon-upload:before {
+  content: "\e936";
+}
+.icomoon-user:before {
+  content: "\e937";
+}
+.icomoon-user-basic:before {
+  content: "\e938";
+}
+.icomoon-arrow-left:before {
+  content: "\e939";
+}
+.icomoon-arrow-down:before {
+  content: "\e93a";
+}
+.icomoon-arrow-up:before {
+  content: "\e93b";
+}
+.icomoon-tree-minus:before {
+  content: "\e93c";
+}
+.icomoon-tree-plus:before {
+  content: "\e93d";
+}
+.icomoon-calendar:before {
+  content: "\e93e";
+}
+.icomoon-sort-down:before {
+  content: "\e93f";
+}
+.icomoon-sort-up:before {
+  content: "\e940";
+}
+.icomoon-view:before {
+  content: "\e941";
+}
+.icomoon-user-circle:before {
+  content: "\e942";
+}
+.icomoon-output-error:before {
+  content: "\e943";
+}
+.icomoon-output-fail:before {
+  content: "\e944";
+}
+.icomoon-output-file:before {
+  content: "\e945";
+}
+.icomoon-output-success:before {
+  content: "\e946";
+}
+.icomoon-lnb-close:before {
+  content: "\e947";
+}
+.icomoon-lnb-open:before {
+  content: "\e948";
+}
+.icomoon-sphere:before {
+  content: "\e9c9";
+}
+.icomoon-earth:before {
+  content: "\e9ca";
+}
+.icomoon-star-full:before {
+  content: "\e9d9";
+}
+.icomoon-plus:before {
+  content: "\ea0a";
+}
+.icomoon-minus:before {
+  content: "\ea0b";
+}
+.icomoon-checkmark:before {
+  content: "\ea10";
+}
+
+/* font-size */
+.fs0 {
+  font-size: 16px;
+}
+.fs1 {
+  font-size: 32px;
+}
+.fs2 {
+  font-size: 32px;
+}

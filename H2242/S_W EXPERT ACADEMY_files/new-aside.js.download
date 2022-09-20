@@ -1,0 +1,65 @@
+$(function(){
+// side menu 
+// 사이드바 오픈여부 쿠키 처리용
+var getCookie = function(name){
+	var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+	return value? value[2] : null;
+};
+
+var setCookie = function(name, value, exp) {
+	var date = new Date();
+	date.setTime(date.getTime() + exp*24*60*60*1000);
+	document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
+};
+
+var deleteCookie = function(name) {
+	document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+};
+
+const list = document.querySelectorAll('.list');
+
+function accordion(e) {
+  e.stopPropagation();
+  if (this.classList.contains('active')) {
+    this.classList.remove('active');
+  } else
+  if (this.parentElement.parentElement.classList.contains('active')) {
+    this.classList.add('active');
+  } else
+  {
+    for (i = 0; i < list.length; i++) {
+      list[i].classList.remove('active');
+    }
+    this.classList.add('active');
+  }
+}
+
+
+for (i = 0; i < list.length; i++) {
+  list[i].addEventListener('click', accordion);
+}
+  
+$('#menu-toggle,#menu-overlay').click(function(){
+  $('body').toggleClass('open-menu');
+});
+
+if(getCookie("isSideBarOpened") == "false"){
+	$(".sw-wrapper").addClass("toggled");
+	$(".aside").show();
+}else{
+	$(".sw-wrapper").removeClass("toggled");
+	$(".aside").show();
+}
+
+$("#close-sidebar").click(function() {
+  $(".sw-wrapper").addClass("toggled");
+  setCookie("isSideBarOpened", "false", 1);
+});
+$("#show-sidebar").click(function() {
+  $(".sw-wrapper").removeClass("toggled");
+  setCookie("isSideBarOpened", "true", 1);
+});
+  
+});
+
+

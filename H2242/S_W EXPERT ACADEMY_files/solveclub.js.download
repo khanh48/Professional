@@ -1,0 +1,7 @@
+function refineSolveClubForm(hasUseAuthClub, form) 
+{
+	if(hasUseAuthClub == 'true') {
+		removeFormElementIfExist(form.password);
+		removeFormElementIfExist(form.solveclubPassword);
+	}
+}

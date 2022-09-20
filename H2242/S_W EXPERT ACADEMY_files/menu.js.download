@@ -1,0 +1,513 @@
+var _currentMenuId;
+
+var _selectedTopMenu;
+
+var _selectedTopMenuId;
+
+
+function processMenus(menus) {
+	// 서버에서 얻는 menu list 에다가 parent/child link 를 넣어주고
+	// depth 별로 분리해 주는 기능 (menusByDepth 에다가)
+	indexMenus(menus);
+	generateTopChildMenus();
+	openCurrentMenu(menus);
+	fixLinks();
+	setTimeout("fixLinks()", 2000);
+	
+}
+
+function fixLinks() {
+  if (typeof addOpenPageParameter == "function") {
+    if (_currentMenuId != null) {
+      addOpenPageParameter("_menuId", _currentMenuId);
+    }
+  }
+  var links = [];
+  var aLinks ;
+  var areaLinks ;
+  if(document.getElementById("contents") != null){
+  	aLinks = document.getElementById("contents").getElementsByTagName("a");
+  	areaLinks = document.getElementById("contents").getElementsByTagName("area");
+  
+    for (var i = 0; i < aLinks.length ;i++) links.push(aLinks[i]);
+    for (var i = 0; i < areaLinks.length ;i++) links.push(areaLinks[i]);
+    
+    if (_currentMenuId == null) {
+      if(searchMap!=null) _currentMenuId = searchMap._menuId;
+    }
+    var searchMap = stringToMap(document.location.search);
+    for (var i = 0, len=links.length; i < len; i++) {
+      var link = links[i];
+      var linkHref = link.href;      
+      if (linkHref != null && linkHref.indexOf("javascript:") != 0 && linkHref.indexOf("mailto:") != 0 
+          && linkHref.length > 1 && linkHref.charAt(0) != '#' &&
+         linkHref.indexOf("_template=") == -1 && linkHref.indexOf(contextPath + "/")!=-1) {
+    	 
+        var sep = linkHref.indexOf('?') == -1 ? '?' : '&';
+        
+        if (_currentMenuId != null && linkHref.indexOf("_menuId=") == -1) {
+          linkHref += sep + "_menuId=" + _currentMenuId;
+        }
+        sep = linkHref.indexOf('?') == -1 ? '?' : '&';
+        
+        if (linkHref.indexOf("_menuF=") == -1) {
+          linkHref += sep + "_menuF=true";
+        }
+        link.href = linkHref;
+      }
+    }
+  }
+  
+  var forms = document.getElementsByTagName("FORM");
+  for (var i = 0, len=forms.length; i < len; i++) {
+    var form = forms[i];
+    if (form.noTemplate == true || form.noTemplate == "true") continue;
+    if (form.method == "POST") {
+      var formAction = form.action;
+      var initialSep = formAction.indexOf('?') == -1 ? '?' : '&';
+      if (_currentMenuId != null && formAction.indexOf("_menuId=") == -1) {
+      	formAction += "&_menuId=" + _currentMenuId;
+      }
+      if (formAction.indexOf("_menuF=") == -1) {
+      	formAction += "&_menuF=true";
+      }
+      form.action = formAction;
+    } else {
+      if (_currentMenuId != null && form._menuId == null) {
+        $(form).append("<input type='hidden' name='_menuId' value='" + _currentMenuId + "'/>");
+      }
+      if (form._menuF == null) {
+    	$(form).append("<input type='hidden' name='_menuF' value='true'/>");
+      }
+    }
+  }
+}
+
+function generateTopChildMenus(){
+	
+	for(var i = 0 ; i < firstMenus.length ; i++){
+		var firstMenuId = firstMenus[i];
+		var topMenu = topLevelMenus[firstMenuId];
+		var children = topMenu.children;
+		var cols = 1;
+		var rows = 0;
+		var nextGroup = false;
+		var childHTML = ''; 
+		if(children != null){
+			for(var k = 0 ; k  < children.length ; k++){
+				rows = rows + 1;
+				var child = children[k];
+				if(k == 0 || nextGroup){
+					childHTML = childHTML + '<ul class="group">';
+				}
+				if(child.url != null && child.url != ''){
+					var selectMenu = menus[child.i]; 
+			    	if(selectMenu.url != null && selectMenu.url.length >=6 && selectMenu.url.substring(0, 5) == "http:"){
+			    		childHTML = childHTML+'<li><a href="'+selectMenu.url+'" target="_blank">'+child.labels[language]+'</a>';
+			    	}else{
+			    		childHTML = childHTML+'<li><a href="#" onclick="selectLeftMenu(' + child.i + ', ' + child.i + ', true);return false;">'+child.labels[language]+'</a>';
+			    	}
+			    	
+				}else{
+					if(child.children !=null && child.children.length > 0 ){
+						childHTML = childHTML+'<li><a href="#" onclick="selectLeftMenu(' + child.children[0].i + ', ' + child.children[0].i + ', true);return false;">'+child.labels[language]+'</a>';
+					}else{
+						childHTML = childHTML+'<li><a href="#">'+child.labels[language]+'</a>';
+					}
+					
+				}
+				var subchildren = child.children;
+				if(subchildren != null){
+					rows = rows + subchildren.length;
+					if(rows >= 10 ){
+						if(k+1 != children.length){
+							cols++;
+						}
+						rows = 0;
+						nextGroup = true;
+					}else{
+						nextGroup = false;
+					}
+					childHTML = childHTML+'<ul>';
+					for(var j = 0 ; j < subchildren.length ; j++){
+						var subchild = subchildren[j];
+						//childHTML = childHTML+'<li><a href="#" onclick="selectLeftMenu(' + subchild.i + ', ' + subchild.i + ', true);return false;">'+subchild.labels[language]+'</a></li>';
+						if(subchild.url != null && subchild.url.length >=6 && subchild.url.substring(0, 5) == "http:"){
+				    		childHTML = childHTML+'<li><a href="'+subchild.url+'" target="_blank">'+subchild.labels[language]+'</a>';
+				    	}else{
+				    		childHTML = childHTML+'<li><a href="#" onclick="selectLeftMenu(' + subchild.i + ', ' + subchild.i + ', true);return false;">'+subchild.labels[language]+'</a>';
+				    	}
+					}
+					childHTML = childHTML+'</ul>';
+				}
+				childHTML = childHTML+'</li>';
+				if(nextGroup){
+					childHTML = childHTML + '</ul>';
+				}
+			}
+			if(!nextGroup){
+				childHTML = childHTML + '</ul>';
+			}
+			
+		}
+		childHTML = childHTML+"</div><div class='iframeDiv' style='display:none;'><iframe style='position:absolute;z-index:999' border='0' frameborder='0' scrolling='no'></iframe></div>";
+		
+		childHTML = '<div class="dropdown_depth" style="z-index:1000;width:'+140*cols+'px;">' + childHTML;
+		var li = document.getElementById(topMenu.id);
+		$(li).append(childHTML);
+		var menuDiv = $(li).find('.dropdown_depth')[0];
+		var iframe = $(li).find('iframe')[0];
+		iframe.style.top = $(menuDiv).css("top");
+		iframe.style.left = $(menuDiv).css("left");
+		iframe.style.pixelWidth = menuDiv.offsetWidth;
+		iframe.style.pixelHeight = menuDiv.offsetHeight;
+		$(li).hover(function(){ 
+			$(this).find('.iframeDiv').css('display','block');
+		},function(){ 
+			$(this).find('.iframeDiv').css('display','none');
+		});
+		
+	}
+}
+
+function openCurrentMenu(menus) {
+  var path = document.location.pathname;
+  var search = document.location.search;
+  var searchMap = stringToMap(document.location.search);
+  path = path + search;
+  path = decodeURIComponent(path.substring(contextPath.length));
+  
+  var searchMenuId = searchMap._menuId;
+  
+  var searchMenuKey = searchMap._menuKey;
+  var selectedMenu;
+  if (searchMap._menuF == true && searchMenuKey!= null){
+  	goToMenuKey(searchMenuKey);
+  } else if (searchMap._menuF == false && searchMenuKey != null) {
+  	selectedMenu = menusByKey[searchMenuKey];
+  } else if (searchMap._menuF == true && searchMenuId != null) {
+    selectedMenu = menusById[searchMenuId];    
+  } else {
+    var matchedMenus = findMatchingMenus(menus, path);
+    if (matchedMenus.length > 0) {
+      selectedMenu = findById(matchedMenus, searchMenuId);
+      if (selectedMenu == null) {
+        selectedMenu = matchedMenus[0];
+      }
+    } else {
+    	if (searchMenuId != null){
+        selectedMenu = menusById[searchMenuId];
+    	}
+    }
+  }
+  
+  var depth1Menu = null; //메인화면에서 최초 넘어와서 맨처음으로 보여질 Top menu에 하위 menu (depth1) 를 보여주기 위함.
+  if (selectedMenu != null) {
+    _currentMenuId = selectedMenu.urlMenuId;
+    var contentLabelPanel = document.getElementById("contents");
+    var parent = selectedMenu.parent;
+    var depth4Menu = selectedMenu;
+    var leftDepth = isInTopMenu(selectedMenu) ? 1: 1;
+    while (parent != null && parent.depth > leftDepth) {
+      if (parent.depth == leftDepth + 1) {
+        depth4Menu = parent;
+      }
+      parent = parent.parent;
+    }
+    if (parent != null && parent.depth == leftDepth) {
+    	
+      selectLeftMenu(parent, selectedMenu);
+      if (parent.depth == 2) {
+        depth1Menu = parent.parent;
+      }else if (parent.depth == 1){
+      	depth1Menu = parent;
+      }
+    }
+    document.title = selectedMenu.labels[language];
+   
+    //최상단 메뉴의 selected 표시 
+    var depth1MenuContent = null;
+    if(depth1Menu){
+    	depth1MenuContent = document.getElementById(depth1Menu.id);
+    	
+    }
+    if (depth1MenuContent != null) {
+      _selectedTopMenu =depth1Menu ;
+      
+      var links = childElements(document.getElementById(depth1Menu.id), "A");
+      for (var i = 0; i < links.length; i++) {
+      	addCSSClass(links[i], "on");
+      }
+    }
+    
+    if(contentLabelPanel){
+        $(contentLabelPanel).prepend('<div class="bc">'+makePath(selectedMenu) + '</div><h3>'+selectedMenu.labels[language]+'</h3>');
+    }
+  }
+ 
+  if (searchMap._menuCollapsed != null) {
+    if (searchMap._menuCollapsed || selectedMenu.defaultCollapse) {
+    	var subcols = document.getElementById('collapse');
+    	if(subcols != null){
+    		showAndHideLeftMenu(document.getElementById('collapse'));
+    	}
+    	
+     if(searchMenuId == 'siteMap'){//site map인경우는 left와 menu path를 안보이게함
+    	 document.getElementById('snb').style.display = "none";
+    	 $(".bc").css("display","none");
+     }
+    }
+  }else if(selectedMenu && selectedMenu.defaultCollapse){
+	  	var subcols = document.getElementById('collapse');
+		if(subcols != null){
+			showAndHideLeftMenu(document.getElementById('collapse'));
+		}
+  }
+//  } else if (selectedMenu == null || selectedMenu.defaultCollapse || depth4Menu.defaultCollapse) {
+//	    //toggleLeftMenu();
+//  }
+
+}
+
+function urlMatches(url1, url2) {
+  if (url1 == null || url1.length == 0) return false;
+  url1 = decodeURIComponent(url1);
+  url2 = decodeURIComponent(url2);
+  
+  var idx1 = url1.indexOf('?');
+  var idx2 = url2.indexOf('?');
+  var path1 = idx1==-1?url1:url1.substring(0, idx1);
+  var path2 = idx2==-1?url2:url2.substring(0, idx2);
+  
+  if (path1 != path2) {
+    return false;
+  }
+  var search1 = idx1==-1?null:url1.substring(idx1 + 1);
+  var search2 = idx2==-1?null:url2.substring(idx2 + 1);
+  var m1 = stringToMap(search1);
+  var m2 = stringToMap(search2);
+  for (var k1 in m1) {
+    var v1 = m1[k1];
+    if (v1 != m2[k1]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function makePath(menu) {
+  var out = ["<strong>" + menu.labels[language] + "</strong>"];
+  menu = menu.parent;
+  while (menu != null) {
+    out = [menu.labels[language]].concat(out);
+    menu = menu.parent;
+  }
+  return out.join(" > ");
+}
+
+function findMatchingMenus(menus, url) {
+  var matched = [];
+  for (var i = 0, len=menus.length; i < len; i++) {
+    var m = menus[i];
+    if (urlMatches(m.url, url)) {
+      matched.push(m);
+     
+    }
+  }
+  return matched;
+}
+
+function findById(menus, id) {
+  if (id == null) return null;
+  for (var i = 0, len=menus.length; i < len; i++) {
+    var m = menus[i];
+    if (m.id == id) return m;
+  }
+  return null;
+}
+
+
+function selectLeftMenu(menu, selectedMenu, goUrl) {
+	if(menu == null || typeof menu == "undefined") return false;
+	menu = typeof menu == "number" ? menus[menu] : menu;
+	selectedMenu = typeof selectedMenu == "number" ? menus[selectedMenu] : selectedMenu;
+	if(goUrl && (selectedMenu.url != null && selectedMenu.url.length > 0)) {
+		goToMenu(selectedMenu);
+	}else {
+		if(document.getElementById("snb") != null ){
+			$("#snb").append(generateLeftMenu(menu, selectedMenu));
+		}
+		
+	}
+	
+}
+
+function generateLeftMenu(menu, selectedMenu) {
+  var out = [];
+  if(menu== null) return false;
+  var children = menu.children;
+  var topLevelMenu = menu.depth==1?menu:menu.parent;
+  var menuType = topLevelMenu.name.toLowerCase();
+  out.push("<h2>");
+  out.push(menu.labels[language]);
+  out.push("</h2>");
+  out.push('<div id="collapse" class="nav_col" title="Collapse" onclick="showAndHideLeftMenu(this)"></div>');
+  
+  var selectedMenuId = selectedMenu == null ? null : selectedMenu.id;
+  var selectedParentId = selectedMenu == null ? null : selectedMenu.parent.id;
+  var selectedGrandParentId = selectedMenu == null || selectedMenu.parent.parent == null ? null : selectedMenu.parent.parent.id;
+  if (children != null) {
+  	out.push("<ul>");
+  	for (var i = 0, len=children.length; i < len; i++) {
+  		var subMenu1 = children[i];
+  		var subMenu1Children = subMenu1.children;
+  		var isSubMenu1Selected = selectedMenuId == subMenu1.id || selectedParentId == subMenu1.id || selectedGrandParentId == subMenu1.id;
+  		var subMenu1Class = "";
+  		if(subMenu1Children && subMenu1Children != null && subMenu1Children.length > 0){
+  			subMenu1Class = subMenu1Class + "dir";
+  		}
+  		out.push("<li id='" + subMenu1.id + "'"+ (isSubMenu1Selected ? "class='on'" : "") +">");
+  		out.push(makeLinkBySpan(subMenu1,isSubMenu1Selected, subMenu1Class));
+  		if (subMenu1Children != null){
+  			out.push("<ul style='"+(isSubMenu1Selected || menu.labels[language] == "Best Reviewer" ? "display:block" : "display:none")+"'>");
+    		for (var j = 0,jlen=subMenu1Children.length; j < jlen; j++) {
+    			  var subMenu2 = subMenu1Children[j];
+		          var isSubMenu2Selected = selectedMenuId == subMenu2.id || selectedParentId == subMenu2.id;
+		          out.push("<li id='" + subMenu2.id + "' " + (isSubMenu2Selected ? " class='on'" : "") +">");
+		          
+		          if (subMenu2.children != null && subMenu2.children.length > 0) {
+		        	out.push(makeLinkBySpan(subMenu2,isSubMenu2Selected,"dir"));
+		          	out.push("<ul style='"+(isSubMenu2Selected ? "display:block" : "display:none")+"'>");
+		          	for (var k = 0,klen=subMenu2.children.length; k < klen; k++) {
+		          		var subMenu3 = subMenu2.children[k];
+		          		var isSubMenu3Selected = selectedMenuId == subMenu3.id;
+		          		out.push("<li id='" + subMenu3.id + "' "+ (isSubMenu3Selected ? " class='on'" : "") +">");
+		          		if(subMenu3.childrean != null && subMenu3.childrean.length > 0 ){
+		          			out.push(makeLinkBySpan(subMenu3,isSubMenu3Selected,"dir"));
+		          			out.push("<ul style='"+(isSubMenu3Selected ? "display:block" : "display:none")+"'>");
+		          			for (var h = 0,hlen=subMenu3.children.length; h < hlen; h++) {
+		          				var subMenu4 = subMenu3.children[h];
+				          		var isSubMenu4Selected = selectedMenuId == subMenu4.id;
+				          		out.push("<li id='" + subMenu4.id + "' "+ (isSubMenu4Selected ? " class='on'" : "") +">");
+				          		out.push(makeLinkBySpan(subMenu4,isSubMenu4Selected,""));
+				          		out.push("</li>");
+		          			}
+		          			out.push("</ul>");
+		          		}else{
+		          			out.push(makeLinkBySpan(subMenu3,isSubMenu3Selected,""));
+		          		}
+		          		
+		          		out.push("</li>");
+		          	}
+		          	out.push("</ul>");
+		          } else {
+		            out.push(makeLinkBySpan(subMenu2,isSubMenu2Selected,""));
+		          }
+		          out.push("</li>");
+    		}
+    		out.push("</ul>");
+  		}
+  		out.push("</li>");
+  	}
+  	out.push("</ul>");
+  }
+  
+  return out.join("");
+}
+
+
+function changeMenuMode(menuId){
+  var menuObj = document.getElementById(menuId);
+	
+  if(menuObj.className.indexOf("on") != -1){
+	 menuObj.className="";
+  }else{
+	 menuObj.className="on";
+  }
+  
+}
+
+
+
+function sessionCheck(){
+	/*
+	var params={};
+	jQuery.ajax({
+		url:contextPath + "/portal/availableSessionCheck.do",
+	    data:params, 
+	    async:false,
+	    type:'POST',
+	    dataType:"json",
+	    success:function (data) {
+		    if(data.success){
+		    }else{
+				document.location.replace(contextPath+"/identity/logout.do");
+		    }
+	    },error:function (request, err, ex) {
+	          alert(err + " ===> " + ex);
+	    }
+	});
+	*/
+}
+
+function menu_Toggle(imgCtr, divName){   
+  if (document.getElementById(divName).className == "gnb_collapsed") {
+    
+	document.getElementById(divName).className = "";
+    imgCtr.src = contextPath+"/images/common/menu_collapse.png";
+    imgCtr.title = "collapse";
+   
+  } else {
+	document.getElementById(divName).className = "gnb_collapsed";
+    imgCtr.src = contextPath+"/images/common/menu_expand.png";  
+    imgCtr.title = "expand";
+  }       
+}
+
+function selectLeftMenuForMIP(menuId){
+	var currentMenu = document.getElementById(_currentMenuId);
+	currentMenu.className="";
+	
+	var selectMenu = document.getElementById(menuId);
+	selectMenu.className="on";
+		
+	_currentMenuId = menuId;
+}
+
+function showAndHideLeftMenu(div){
+	var container = document.getElementById("container");
+	if(div.className!='nav_col'){
+		container.className = '';
+		div.className='nav_col';
+		div.title ='Collapse';
+	}else{
+		container.className = 'snb_collapsed';
+		div.className='nav_exp';
+		div.title ='Expend';
+		
+	}
+}
+
+function changeMenuModeByImg(menuId){
+  var menuObj = document.getElementById(menuId);
+  var menuUL = $(menuObj).children("UL");
+  var categoryMenuLink = $(menuObj).find("IMG");
+  var display = menuUL.css("display");
+  if(display=='block'){
+	
+	//$(menuObj).removeClass("on");
+	$(menuUL).css("display","none");
+  	$(categoryMenuLink).attr("src", contextPath +"/images/common/bul_snb_expand.png");
+  	//$(categoryMenuSPAN).css("color" , "#454545");
+  	
+  }else{
+	//$(menuObj).addClass("on");
+	$(menuUL).css("display","block");
+  	$(categoryMenuLink).attr("src", contextPath + "/images/common/bul_snb_collaspe.png");
+  	
+  	//$(categoryMenuSPAN).css("color" , "#046fb4");
+  	
+  }
+  
+}
+
